@@ -1,5 +1,4 @@
 # autokernel-docs
-The experimental version of AutoKernel docs
 <p align="center"><img width="30%" src="https://github.com/OAID/AutoKernel/blob/main/doc/logo.png?raw=true" /></p>
 
 ## AutoKernel
@@ -140,11 +139,11 @@ nvidia-docker run -it openaialb/autokernel:cuda /bin/bash
 
 ### 开发者指南
 
-* 如何快速开发一个自动优化的新算子：[doc/how_to_add_op.md](doc/how_to_add_op.md)
-* AutoKernel教程：[doc/tutorials](doc/tutorials/readme.md)
+* 如何快速开发一个自动优化的新算子：[how_to_add_op](https://github.com/OAID/AutoKernel/blob/main/doc/how_to_add_op.md)
+* AutoKernel教程：[tutorials](https://github.com/OAID/AutoKernel/tree/main/doc/tutorials)
 
 ### Roadmap
-- [Road map](doc/roadmap.md)
+- [Road map](https://github.com/OAID/AutoKernel/blob/main/doc/roadmap.md)
 
 ### License
 
