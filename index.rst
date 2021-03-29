@@ -55,5 +55,5 @@ Welcome to AutoKernel Docs!
   :maxdepth: 1
   :caption: 博文Blog
 
-  blog/ai_compiler
-
+  blog/autokernel_optimize_gemm_over_200_times_faster
+  bloai_compiler_overview
