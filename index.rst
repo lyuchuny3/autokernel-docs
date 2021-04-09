@@ -16,39 +16,34 @@ Welcome to AutoKernel Docs!
   introduction/support_hardware
   introduction/support_op
 
-
 .. toctree::
   :maxdepth: 1
-  :caption: 快速开始
-  :name: sec-quick-start
+  :caption: 安装
+  :name: sec-installation
 
-  quick_start/install
-  quick_start/docker
-  quick_start/tengine
-  quick_start/halide
-  quick_start/autokernel_plugin_tengine
-  quick_start/gemm
-  quick_start/cv_op
-  quick_start/autosearch
-
+  installation/install_from_source
+  installation/install_from_docker
 
 
 .. toctree::
-  :maxdepth: 1
-  :caption: 多后端示例
-  :name: sec-demo_guides
+  :maxdepth: 2
+  :caption: 教程
+  :name: sec-tutorial
 
-  demo_guides/arm64_cpu
-  demo_guides/x86_cpu
-  demo_guides/opencl
-  demo_guides/cuda
+  tutorials/quick_start
+  tutorials/tengine
+  tutorials/halide/index
+  tutorials/autosearch
+
 
 .. toctree::
-  :maxdepth: 1
-  :caption: 教程Tutorials
-  :name: sec-source-compile
+  :maxdepth: 2
+  :caption: 示例
+  :name: sec-demo
 
-  tutorials/tutorial
+  demo/multi_backend/index
+  demo/gemm_optimization_x86
+  demo/cv_op
 
 
 .. toctree::
