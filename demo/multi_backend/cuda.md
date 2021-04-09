@@ -3,9 +3,9 @@ This example shows how to use Halide to run code on a GPU(cuda). Source codes ar
 
 ## 0. source code  
 The codes related are listed below:  
-[CMakeLists](demo_guides/cuda_matmul/CMakeLists.txt)  
-[matmul_gen](demo_guides/cuda_matmul/matmul_gen.cpp)   
-[matmul_run](demo_guides/cuda_matmul/matmul_run.cpp)  
+[CMakeLists](./cuda_matmul/CMakeLists.txt)  
+[matmul_gen](./cuda_matmul/matmul_gen.cpp)   
+[matmul_run](./cuda_matmul/matmul_run.cpp)  
   
 ## 1. using nvidia-docker
 we provide a cuda-docker image `openaialb/autokernel:cuda` with Halide and Tengine installed in it. To launch it, using nvidia-docker:
