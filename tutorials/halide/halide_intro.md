@@ -12,5 +12,5 @@ f(x, y) = (input(x-1, y) + input(x, y) + input(x+1, y))/3;
 f.hexagon().vectorize(x, 8).parallel(y, 16);  
 ```
 该算法根据像素的x和y坐标简洁地定义了模糊计算。而进度表指示应如何进行计算。在本示例中，程序员指示Halide将模糊算法矢量化8像素，将算法并行化16倍，然后在Hexagon HVX处理器上启动它。   
-Halide HVX编译器自动将程序员编写的高级图像算法转换为高效的HVX可执行文件。 
+Halide HVX编译器自动将程序员编写的高级图像算法转换为高效的HVX可执行文件。   
 [Halide社区](https://halide-lang.org/tutorials/tutorial_introduction.html)上托管了丰富的教程集，想要对Halide有更多了解，欢迎自行学习。 
