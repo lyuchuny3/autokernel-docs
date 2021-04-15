@@ -13,6 +13,8 @@ Schedule是Halide程序的另一个组成部分； 它指定了算法计算的�
   - parallel
   - compute_at
   - compute_root
+  - align_storage  
+  - 
 ## 优化宗旨
 
 1.提高局部性，提高缓存命中率
@@ -259,6 +261,101 @@ def tile():
           for x.xi in [0, 3]:
             func_tile(...) = ...
 ```
+## align_storage  
+调用方法：   
+```
+.align_storage(x, align)   
+```
+该指令将此功能实现的特定维度的存储范围扩展为指定对齐方式的倍数。 这保证了存储在dim之外的尺寸的跨度将是指定路线的倍数，其中跨度和路线以元素数衡量。    
+
+例如，要保证代表图像的函数foo（x，y，c）具有从以16的倍数对齐的偏移量开始的扫描线，请使用foo.align_storage（x，16）。
+
+## store_root  
+调用方法：  
+```  
+store_root()  
+```
+该指令用于将阶段的分配置于顶层。在最外层循环之外分配存储空间可以帮助避免相同表达式的冗余计算，但以增加的内存占用为代价。 例如，考虑以下pipeline：   
+```
+g(x, y) = x*y;    
+f(x, y) = g(x, y) + g(x, y+1) + g(x+1, y) + g(x+1, y+1);    
+g.compute_at(f, y).store_root();  
+```
+不带store_root 和 compute_at的伪代码：  
+```
+int f[height][width]; 
+for (int y = 0; y < height; y++) {  
+  for (int x = 0; x < width; x++) { 
+    int g[2][2];  
+    g[0][0] = x*y;  
+    g[0][1] = (x+1)*y;  
+    g[1][0] = x*(y+1);  
+    g[1][1] = (x+1)*(y+1);  
+    f[y][x] = g[0][0] + g[1][0] + g[0][1] + g[1][1];  
+  }     
+}   
+```
+带store_root 和 compute_at的伪代码： 
+```
+int f[height][width]; 
+int g[height+1][width+1]; 
+for (int y = 0; y < height; y++) {  
+  for (int x = 0; x < width; x++) { 
+    if (x==0 || y==0) 
+      g[y][x] = x*y;  
+    if (y==0) 
+      g[y][x+1] = (x+1)*y;  
+    if (x==0) 
+      g[y+1][x] = x*(y+1);  
+    g[y+1][x+1] = (x+1)*(y+1);  
+    f[y][x] = g[y][x] + g[y][x+1] + g[y+1][x] + g[y+1][x+1];  
+  } 
+} 
+```
+## store_at  
+调用方法：   
+```
+producer.store_at(consumer, dim)  
+consumer: Any of the consumer stage for the current producer stage  
+dim : dim inside which to allocate memory for the current stage 
+```
+该伪指令用于指定在哪里分配内存。调整生产者函数的分配大小以匹配计算函数的要求。  
+例如，考虑以下pipeline：    
+```
+g(x, y) = x*y;    
+f(x, y) = g(x, y) + g(x, y+1) + g(x+1, y) + g(x+1, y+1);    
+g.compute_at(f, x).store_at(f, y);      
+```
+
+不带store_at 和 compute_at的伪代码：  
+```
+int f[height][width]; 
+for (int y = 0; y < height; y++) {  
+  for (int x = 0; x < width; x++) { 
+    int g[2][2];  
+    g[0][0] = x*y;  
+    g[0][1] = (x+1)*y;  
+    g[1][0] = x*(y+1);  
+    g[1][1] = (x+1)*(y+1);  
+    f[y][x] = g[0][0] + g[1][0] + g[0][1] + g[1][1];  
+  } 
+} 
+```
+带store_at 和 compute_at的伪代码：   
+```
+int f[height][width]; 
+for (int y = 0; y < height; y++) {  
+  int g[2][width+1];  
+  for (int x = 0; x < width; x++) { 
+    g[0][x] = x*y;  
+    g[0][x+1] = (x+1)*y;    
+    g[1][x] = x*(y+1);  
+    g[1][x+1] = (x+1)*(y+1);  
+    f[y][x] = g[0][x] + g[1][x] + g[0][x+1] + g[1][x+1];    
+   }  
+} 
+```
+____
 后续的几个schedule
   - compute_at
   - compute_root
