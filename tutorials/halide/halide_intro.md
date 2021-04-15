@@ -1,4 +1,4 @@
-# Halide初探  
+# Halide简介  
 Halide是视觉和图像处理算法的特定领域语言，允许程序员编写有效的图像处理pipeline。 Halide将程序分为两个概念部分：  
 ■ 算法（algorithm）–定义在每个像素处要计算的内容  
 ■ 布局策略（schedule）–定义应如何组织计算  
