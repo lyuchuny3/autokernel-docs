@@ -14,7 +14,8 @@ Schedule是Halide程序的另一个组成部分； 它指定了算法计算的�
   - compute_at
   - compute_root
   - align_storage  
-  - 
+  - store_root  
+  - store_at  
 ## 优化宗旨
 
 1.提高局部性，提高缓存命中率
