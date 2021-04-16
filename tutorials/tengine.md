@@ -14,7 +14,7 @@ Tengine是一个轻量级深度神经网络推理引擎。本文档将在x86 Lin
   
 **计算流程**
 
-![inference](data/inference.png)
+![inference](halide/data/inference.png)
 
 1. 加载模型：得到神经网络结构和权重数据
 
@@ -55,7 +55,7 @@ Tengine是一个轻量级深度神经网络推理引擎。本文档将在x86 Lin
     float* output_data = ( float* )get_tensor_buffer(output_tensor);
     ```
 * 代码：
-    - 完整的代码源文件在: [data/02_tengine_tutorial.cpp](data/02_tengine_tutorial.cpp),代码非常清晰简洁~
+    - 完整的代码源文件在: [data/02_tengine_tutorial.cpp](halide/data/02_tengine_tutorial.cpp),代码非常清晰简洁~
     - 代码使用了一些工具函数，在文件[tengine_operations.h](https://github.com/OAID/Tengine/blob/tengine-lite/examples/common/tengine_operations.h)中
 
 * 编译
