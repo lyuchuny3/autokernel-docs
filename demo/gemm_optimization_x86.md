@@ -3,7 +3,7 @@
   
 ![gemm.jpg](../Images/GEMM/gemm.jpg)  
    
-**运行环境搭建：**   
+**运行环境搭建：**         
 AutoKernel提供了docker镜像，docker里已经配置好运行环境，进入docker即可直接运行demo代码：  
 ```  
 # 拉取镜像  
@@ -15,8 +15,8 @@ git clone https://github.com/OAID/AutoKernel.git
 cd AutoKernel/doc/tutorials/data/  
 ```  
    
-目录下的build.sh是demo的执行脚本，运行需要指定优化步骤step，可选的step是从1 到7，其中step= 1 是默认不优化的，step=7是最极致优化的。  
-**优化效果：**   
+目录下的build.sh是demo的执行脚本，运行需要指定优化步骤step，可选的step是从1 到7，其中step= 1 是默认不优化的，step=7是最极致优化的。          
+**优化效果：**         
 ```   
 # 执行demo  
 ./build.sh 1  
@@ -27,8 +27,8 @@ cd AutoKernel/doc/tutorials/data/
    
 ![图片1.png](../Images/GEMM/图片1.png)  
    
-**下面是详细的优化步骤：**  
-**STEP 1**  
+**下面是详细的优化步骤：**       
+**STEP 1**          
 第一个步骤是不带任何优化的。用Halide语言直接描述GEMM的计算过程。  
 ```   
 1. Var x,y;
@@ -43,7 +43,7 @@ step =  1
 M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      240.8523 ms     1.1376 ms   
 ```   
 
-**STEP 2**  
+**STEP 2**            
 这一步我们采用分块tile。分块的目的是为了充分利用缓存。如果原来的循环较大，tile分块改成小块数据去计算，可以使得每次计算的数据都比较舒适地呆在缓存里，不用经历重复的驱逐（在缓存中重复的添加和删除数据)。分块后进行reorder操作，交换两个嵌套循环的顺序，目的是最内层的内存访问友好。我们按照x,y维度划分成16x8的小分块去计算：  
 ```   
 1.	gemm.update()  
@@ -59,7 +59,7 @@ M N K = 640 640 640     err 0.00        [rep 50] halide | blas  81.8148 ms      
 ```
 > 性能从240ms优化到82ms，提升了近3倍。  
    
-**STEP 3**   
+**STEP 3**        
 我们在上一步的基础上增加向量化vectorize。向量化是把几个标量计算（scale)转换为一个向量计算（vector),充分利用SIMD向量指令。大部分现代CPU支持SIMD（Single Instruction Multiple Data，单指令流多数据流）。在同一个CPU循环中，SIMD可在多个值上同时执行相同的运算/指令。   
 ```   
 1.	gemm.update()  
@@ -76,7 +76,7 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      27.5433 
 ```     
 >性能从82ms优化到27ms，又加速了接近3倍。可以看到，围绕前面提到的两条优化宗旨：优化内存访问和提高并行性，从step1到step3，性能已经提升了近9倍。   
    
-**STEP 4**   
+**STEP 4**        
 调度策略在step3的基础上增加并行化parallel。对一个循环并行化是把循环的每次迭代分给多个线程或者处理器去同时处理，每个线程处理通过代码段（loop body),但是处理不同的数据。   
 ```   
 1.	gemm(x, y) += A(k, y) * B(x, k);  
@@ -94,7 +94,7 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      7.2605 m
 ```   
 > 增加并行化后，build.sh默认指定四线程，性能直接翻了近4倍，从27ms到7.3ms。   
    
-**STEP 5**  
+**STEP 5**          
 调度策略在上一步的基础上增加unroll展开。如果循环体内的语句没有数据相关依赖，循环展开可以增加并发执行的机会，使得更充分利用寄存器，减少循环时每个操作内存加载和保存的次数。   
 ```   
 1.	gemm.update()  
@@ -113,12 +113,12 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      4.7617 m
 ```   
 > unroll展开后，性能从7.3ms优化到4.8ms。  
 
-**STEP 6**  
+**STEP 6**          
 前面的分块成 16 x 8的小kernel, 这一步先划分成 16 x 32的分块，然后把每个分块再分成 16 x 8的子分块。我们把最外层的两层循环合并到一层，并对这一层进行并行化。这一步计算描述多了一个prod函数来定义子分块的计算，prod函数的计算公式和总的gemm是一样的，我们通过 compute_at指定在 yi维度之下计算prod，则prod计算的是 16x8的小kernel, 大致逻辑如下：   
    
 ![step6.png](../Images/GEMM/step6.png)   
    
-**总的代码如下：**   
+**总的代码如下：**           
 ```   
 1.	Func prod;  
 2.	prod(x, y) += A(k, y) * B(x, k);  
@@ -149,12 +149,12 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      3.1824 m
 ```  
 > 这一步距离STEP1性能已经优化了近80倍了，性能越来越接近OpenBlas了。   
 
-**STEP 7**  
+**STEP 7**          
 这一步添加的操作是对矩阵B进行数据重排，使得在计算小kernel 16x8时，内存读取更顺畅。因为小kernel的x维度是按照16划分的，因此重排数据B的x维度也是按照16重排。   
    
 ![interleave.png](../Images/GEMM/interleave.png)   
   
-**总的代码如下：**   
+**总的代码如下：**           
 ```   
 1.	Func B_interleave("B"), Bs("Bs");  
 2.	Bs(x, y, xo) = B(xo * 16 + x, y);  
