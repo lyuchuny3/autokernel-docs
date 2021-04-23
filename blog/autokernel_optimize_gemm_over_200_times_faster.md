@@ -52,7 +52,7 @@ cd AutoKernel/doc/tutorials/data/
   
 下图展示了在Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz的电脑上的优化效果，无需手工撸代码，无需编写繁杂冗长的底层汇编代码，只需十几行简洁的调度代码, 就能性能优化200+倍。 
    
-![](../Images/GEMM/图片1.png)  
+![](../Images/GEMM/Figure1.png)  
    
 **下面是详细的优化步骤：**         
 **STEP 1**            
