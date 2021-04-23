@@ -1,16 +1,23 @@
-# Halide简介  
-Halide是视觉和图像处理算法的特定领域语言，允许程序员编写有效的图像处理pipeline。 Halide将程序分为两个概念部分：  
-■ 算法（algorithm）–定义在每个像素处要计算的内容  
-■ 调度策略（schedule）–定义应如何组织计算  
-每个Halide程序都必须由这两部分组成，并且用户必须同时指定这两个部分。下面的示例是在Halide中编写的水平模糊程序：  
-```
-// Image with 8 bits per pixel.  
-ImageParam input(UInt(8), 2) Halide::Func f;    
-// Algorithm.   
-f(x, y) = (input(x-1, y) + input(x, y) + input(x+1, y))/3;    
-// Schedule   
-f.hexagon().vectorize(x, 8).parallel(y, 16);  
-```
-该算法根据像素的x和y坐标简洁地定义了模糊计算。而schedule指示应如何进行计算。在本示例中，程序员指示Halide将模糊算法矢量化8像素，将算法并行化16倍，然后在Hexagon HVX处理器上启动它。   
-Halide HVX编译器自动将程序员编写的高级图像算法转换为高效的HVX可执行文件。   
-[Halide社区](https://halide-lang.org/tutorials/tutorial_introduction.html)上托管了丰富的教程集，想要对Halide有更多了解，欢迎自行学习。 
+# Halide简介
+
+Halide是基于C++的领域特定语言domain specific language (DSL)，用于图像处理的高性能算子自动生成。
+
+## 编译
+Halide支持两种编译模式:
+
+- Ahead of Time (AOT)
+- Just in Time (JIT)
+
+## 目标硬件支持
+Halide 目前支持的后端:
+
+- CPU architectures: X86, ARM, MIPS, Hexagon, PowerPC, RISC-V
+- Operating systems: Linux, Windows, macOS, Android, iOS, Qualcomm QuRT
+- GPU Compute APIs: CUDA, OpenCL, OpenGL Compute Shaders, Apple Metal, Microsoft Direct X 12
+
+## Halide资源
+- Halide 官网: http://halide-lang.org/
+- github: https://github.com/halide/Halide
+- API文档: http://halide-lang.org/docs
+- [Halide教程](https://halide-lang.org/tutorials/tutorial_introduction.html) 想要对Halide有更多了解，欢迎自行学习
+

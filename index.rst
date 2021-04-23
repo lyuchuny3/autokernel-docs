@@ -12,9 +12,7 @@ Welcome to AutoKernel Docs!
   :caption: 简介
   :name: sec-introduction
 
-  introduction/architecture
-  introduction/support_hardware
-  introduction/support_op
+  introduction/introduction
 
 .. toctree::
   :maxdepth: 1
@@ -30,20 +28,17 @@ Welcome to AutoKernel Docs!
   :caption: 教程
   :name: sec-tutorial
 
-  tutorials/quick_start
+  tutorials/autosearch
+  tutorials/autokernel_plugin
   tutorials/tengine
   tutorials/halide/index
-  tutorials/autosearch
-
 
 .. toctree::
   :maxdepth: 2
   :caption: 示例
   :name: sec-demo
 
-  demo/multi_backend/index
   demo/gemm_optimization_x86
-  demo/cv_op
 
 
 .. toctree::
